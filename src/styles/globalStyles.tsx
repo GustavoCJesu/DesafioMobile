@@ -16,11 +16,17 @@ export const globalStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    flex:{
+        flex: 1
+    },
     pm:{
         padding: 20
     },
     ps:{
         padding: 10
+    },
+    iconp:{
+        padding: 8
     },
     row: {
         flexDirection: 'row',
@@ -33,10 +39,15 @@ export const globalStyles = StyleSheet.create({
     },
     box:{
         borderWidth: 1,
-        borderColor: 'black',
-        padding: 5,
+        borderColor: 'rgb(0,0,0,0.1)',
         borderRadius: 10,
-        color: '#fff',
+        flex: 1,
+        margin: 5,
+    },
+    border: {
+        borderWidth: 1,
+        borderColor: 'rgb(0,0,0,0.1)',
+        borderRadius: 10,
     },
     shadow: {
         shadowColor: '#000',
@@ -51,5 +62,19 @@ export const globalStyles = StyleSheet.create({
     input:{
         borderWidth: 1,
         borderColor: '#4b5ce3'
+    },
+    span:{
+        backgroundColor: 'rgb(255,255,255,0.2)',
+        color: '#fff',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 100
+    },
+    alertSpan:{
+        backgroundColor: '#fae2a7',
+        color: '#BA8E23',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 100
     }
 })

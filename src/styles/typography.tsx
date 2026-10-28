@@ -1,6 +1,10 @@
 import { StyleSheet } from "react-native"
 
 export const typography = StyleSheet.create({
+    bigFont:{
+        fontWeight: 'bold',
+        fontSize: 50,
+    },
     h1:{
         fontSize: 31,
         fontWeight: 'bold'
@@ -17,6 +21,9 @@ export const typography = StyleSheet.create({
         fontSize: 15,
         fontWeight: "300"
     },
+    bold:{
+        fontWeight: 'bold'
+    },
     error:{
         color: '#ef4444'
     },
@@ -24,9 +31,12 @@ export const typography = StyleSheet.create({
         fontFamily: 'Roboto'
     },
     primary:{
-        color: '#0f172a'
+        color: '#4b5ce3'
     },
     secundary:{
+        color: '#0f172a'
+    },
+    tertiary:{
         color: '#475569'
     }
 })
