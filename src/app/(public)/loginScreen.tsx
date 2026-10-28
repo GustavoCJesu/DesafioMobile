@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { ScreenContainer } from "@/components/ScreenContainer";
 
 //Import dos icones
 import {
@@ -31,15 +30,19 @@ import { SafeAreaView } from "react-native-safe-area-context"; // Importe daqui!
 import { Label, Redirect, useRouter } from "expo-router";
 import { useState } from "react";
 
-import { login } from "../../../services/serviceLogin";
+import { login } from "../../services/serviceLogin";
 
-export default function loginScreen() {
+import {useUser} from '../../Context/UserContext'
+
+export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
   const [error, setError] = useState(false);
 
   const router = useRouter()
+
+  const {setUser} = useUser()
 
   const handleLogin = async (email: string, senha: string) => {
     if (!email || !senha) {
@@ -49,7 +52,12 @@ export default function loginScreen() {
 
     try {
       const response = await login(email, senha);
-      router.replace('/(app)/homeScreen')
+      setUser({
+        user: response.user,
+        employee: response.employee
+      })
+
+      router.replace('/(protected)/homeScreen')
     } catch (e) {
       console.log(e);
       throw e;
