@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 import { globalStyles } from "@/styles/globalStyles";
 import { useRouter } from "expo-router";
@@ -98,9 +99,10 @@ export default function HomeScreen() {
     diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1);
   const dataCompleta = `${diaSemanaFormatado}, ${diaMes} de ${mes}`;
 
+
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={styles.loading}>
         <ActivityIndicator size="large" />
         <Text>Carregando dados...</Text>
       </View>
@@ -108,30 +110,12 @@ export default function HomeScreen() {
   }
 
   return (
-    <ScrollView
-      style={{ backgroundColor: "#F2FAFE" }}
-      contentContainerStyle={{ flexGrow: 1 }}
-    >
-      <View
-        style={[
-          globalStyles.container,
-          { padding: 10, gap: 20, justifyContent: "flex-start" },
-        ]}
-      >
+    <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+      <View style={[globalStyles.container, styles.content]}>
         {/* Menu do usuario */}
-        <View style={[globalStyles.row, { gap: 4, alignSelf: "flex-start" }]}>
+        <View style={[globalStyles.row, styles.userMenu]}>
           <View>
-            <Text
-              style={[
-                typography.h2,
-                {
-                  backgroundColor: "#4b5ce3",
-                  color: "#fff",
-                  borderRadius: 100,
-                },
-                globalStyles.ps,
-              ]}
-            >
+            <Text style={[typography.h2, styles.avatar, globalStyles.ps]}>
               {iniciais}
             </Text>
           </View>
@@ -145,62 +129,46 @@ export default function HomeScreen() {
         {/* Seção Indice de conformidade e outras informações */}
         <LinearGradient
           {...gradients.primary}
-          style={[globalStyles.pm, { width: "100%", borderRadius: 20 }]}
+          style={[globalStyles.pm, styles.conformidadeCard]}
         >
-          <View
-            style={[
-              globalStyles.row,
-              { width: "100%", justifyContent: "space-between" },
-            ]}
-          >
-            <Text style={[{ color: "#fff" }, typography.bold]}>
+          <View style={[globalStyles.row, styles.conformidadeHeader]}>
+            <Text style={[styles.textWhite, typography.bold]}>
               Índice de conformidade
             </Text>
             <Text style={globalStyles.span}>Todos os setores</Text>
           </View>
           <View>
-            <View style={[globalStyles.row, { alignItems: "flex-end" }]}>
-              <Text style={[{ color: "#fff" }, typography.p]}>
+            <View style={[globalStyles.row, styles.conformidadeTextRow]}>
+              <Text style={[styles.textWhite, typography.p]}>
                 <Text style={[typography.bigFont]}>{conformidade}%</Text> das
                 convocações em dia
               </Text>
             </View>
-            <View
-              style={{
-                width: "100%",
-                backgroundColor: "#fff",
-                height: 10,
-                borderRadius: 100,
-              }}
-            >
+            <View style={styles.progressTrack}>
+              {/* Único estilo dinâmico: a largura depende do valor da API */}
               <View
-                style={{
-                  backgroundColor: "#a8b2fd",
-                  width: `${conformidade}%`,
-                  height: "100%",
-                  borderRadius: 100,
-                }}
+                style={[styles.progressFill, { width: `${conformidade}%` }]}
               ></View>
             </View>
           </View>
-          <View style={[globalStyles.row, { justifyContent: "space-between" }]}>
+          <View style={[globalStyles.row, styles.statsRow]}>
             <View>
-              <Text style={[typography.h2, { color: "#fff" }]}>{ativos}</Text>
-              <Text style={[{ color: "#fff" }, typography.p]}>Ativos</Text>
+              <Text style={[typography.h2, styles.textWhite]}>{ativos}</Text>
+              <Text style={[styles.textWhite, typography.p]}>Ativos</Text>
             </View>
             <View>
-              <Text style={[typography.h2, { color: "#fff" }]}>
+              <Text style={[typography.h2, styles.textWhite]}>
                 {totalCertificados}
               </Text>
-              <Text style={[{ color: "#fff" }, typography.p]}>
+              <Text style={[styles.textWhite, typography.p]}>
                 Com certificados
               </Text>
             </View>
             <View>
-              <Text style={[typography.h2, { color: "#fff" }]}>
+              <Text style={[typography.h2, styles.textWhite]}>
                 {certificadosIrregulares}
               </Text>
-              <Text style={[{ color: "#fff" }, typography.p]}>
+              <Text style={[styles.textWhite, typography.p]}>
                 Irregularidades
               </Text>
             </View>
@@ -208,34 +176,13 @@ export default function HomeScreen() {
         </LinearGradient>
         {/* Seção Indice de conformidade e outras informações  - FIM*/}
         {/* Seção 'Precisa de Atenção' */}
-        <View style={[{ width: "100%" }]}>
-          <Text
-            style={[
-              typography.h3,
-              typography.bold,
-              { alignSelf: "flex-start" },
-            ]}
-          >
+        <View style={styles.section}>
+          <Text style={[typography.h3, typography.bold, styles.sectionTitle]}>
             Precisa de atenção
           </Text>
-          <View style={[globalStyles.row, { justifyContent: "space-around" }]}>
-            <View
-              style={[
-                globalStyles.box,
-                globalStyles.ps,
-                { backgroundColor: "#fff" },
-              ]}
-            >
-              <View
-                style={[
-                  globalStyles.iconp,
-                  {
-                    backgroundColor: "#fae2a7",
-                    alignSelf: "flex-start",
-                    borderRadius: 10,
-                  },
-                ]}
-              >
+          <View style={[globalStyles.row, styles.atencaoRow]}>
+            <View style={[globalStyles.box, globalStyles.ps, styles.atencaoCard]}>
+              <View style={[globalStyles.iconp, styles.atencaoIconAmarelo]}>
                 <Clock color={"#BA8E23"} size={20} />
               </View>
               <Text style={typography.h2}>
@@ -243,23 +190,8 @@ export default function HomeScreen() {
               </Text>
               <Text style={typography.p}>A vencer em 60 dias</Text>
             </View>
-            <View
-              style={[
-                globalStyles.box,
-                globalStyles.ps,
-                { backgroundColor: "#fff" },
-              ]}
-            >
-              <View
-                style={[
-                  globalStyles.iconp,
-                  {
-                    backgroundColor: "#f7d3d3",
-                    alignSelf: "flex-start",
-                    borderRadius: 10,
-                  },
-                ]}
-              >
+            <View style={[globalStyles.box, globalStyles.ps, styles.atencaoCard]}>
+              <View style={[globalStyles.iconp, styles.atencaoIconVermelho]}>
                 <CircleX color={"red"} size={20} />
               </View>
               <Text style={typography.h2}>{certificadosIrregulares}</Text>
@@ -269,49 +201,31 @@ export default function HomeScreen() {
         </View>
         {/* Seção 'Precisa de Atenção' - FIM */}
         {/* Ações Rapidas */}
-        <View style={{ width: "100%", gap: 10 }}>
-          <Text
-            style={[
-              typography.h3,
-              typography.bold,
-              { alignSelf: "flex-start" },
-            ]}
-          >
+        <View style={styles.sectionGap}>
+          <Text style={[typography.h3, typography.bold, styles.sectionTitle]}>
             Ações rápidas
           </Text>
-          <View style={[globalStyles.row, { alignItems: "flex-start" }]}>
+          <View style={[globalStyles.row, styles.acoesRow]}>
             {acoesRapidas.map(({ icon: Icon, label, href }) => (
               <TouchableOpacity
                 key={label}
                 onPress={href ? () => router.push(href) : undefined}
-                style={[globalStyles.flex, { alignItems: "center", gap: 6 }]}
+                style={[globalStyles.flex, styles.acaoItem]}
               >
                 <View
-                  style={[
-                    globalStyles.iconp,
-                    globalStyles.border,
-                    { backgroundColor: "#fff" },
-                  ]}
+                  style={[globalStyles.iconp, globalStyles.border, styles.acaoIcon]}
                 >
                   <Icon color={"#4b5ce3"} size={30} strokeWidth={1.5} />
                 </View>
-                <Text style={[typography.p, { textAlign: "center" }]}>
-                  {label}
-                </Text>
+                <Text style={[typography.p, styles.acaoLabel]}>{label}</Text>
               </TouchableOpacity>
             ))}
           </View>
         </View>
         {/* Ações Rapidas - FIM*/}
-        <View style={{ width: "100%", gap: 10 }}>
-          <View style={[globalStyles.row, { justifyContent: "space-between" }]}>
-            <Text
-              style={[
-                typography.h3,
-                typography.bold,
-                { alignSelf: "flex-start" },
-              ]}
-            >
+        <View style={styles.sectionGap}>
+          <View style={[globalStyles.row, styles.venceHeader]}>
+            <Text style={[typography.h3, typography.bold, styles.sectionTitle]}>
               Vence em breve
             </Text>
             <TouchableOpacity>
@@ -338,3 +252,101 @@ export default function HomeScreen() {
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scroll: {
+    backgroundColor: "#F2FAFE",
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  content: {
+    padding: 10,
+    gap: 20,
+    justifyContent: "flex-start",
+  },
+  userMenu: {
+    gap: 4,
+    alignSelf: "flex-start",
+  },
+  avatar: {
+    backgroundColor: "#4b5ce3",
+    color: "#fff",
+    borderRadius: 100,
+  },
+  textWhite: {
+    color: "#fff",
+  },
+  conformidadeCard: {
+    width: "100%",
+    borderRadius: 20,
+  },
+  conformidadeHeader: {
+    width: "100%",
+    justifyContent: "space-between",
+  },
+  conformidadeTextRow: {
+    alignItems: "flex-end",
+  },
+  progressTrack: {
+    width: "100%",
+    backgroundColor: "#fff",
+    height: 10,
+    borderRadius: 100,
+  },
+  progressFill: {
+    backgroundColor: "#a8b2fd",
+    height: "100%",
+    borderRadius: 100,
+  },
+  statsRow: {
+    justifyContent: "space-between",
+  },
+  section: {
+    width: "100%",
+  },
+  sectionGap: {
+    width: "100%",
+    gap: 10,
+  },
+  sectionTitle: {
+    alignSelf: "flex-start",
+  },
+  atencaoRow: {
+    justifyContent: "space-around",
+  },
+  atencaoCard: {
+    backgroundColor: "#fff",
+  },
+  atencaoIconAmarelo: {
+    backgroundColor: "#fae2a7",
+    alignSelf: "flex-start",
+    borderRadius: 10,
+  },
+  atencaoIconVermelho: {
+    backgroundColor: "#f7d3d3",
+    alignSelf: "flex-start",
+    borderRadius: 10,
+  },
+  acoesRow: {
+    alignItems: "flex-start",
+  },
+  acaoItem: {
+    alignItems: "center",
+    gap: 6,
+  },
+  acaoIcon: {
+    backgroundColor: "#fff",
+  },
+  acaoLabel: {
+    textAlign: "center",
+  },
+  venceHeader: {
+    justifyContent: "space-between",
+  },
+});

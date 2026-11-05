@@ -14,9 +14,9 @@ export default function Index() {
 
   useEffect(()=>{
     if (token) {
-    router.replace("/(protected)/homeScreen");
+    router.replace("/(public)/loginScreen");
   } else {
-    router.replace("/(protected)/homeScreen");
+    router.replace("/(public)/loginScreen");
   }
   }, [token, router])
 
