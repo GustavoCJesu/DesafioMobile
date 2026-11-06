@@ -15,22 +15,23 @@ async function abrirBanco() {
 
   await db.execAsync(`
         PRAGMA journal_mode = WAL;
-        CREATE TABLE IF NOT EXIST saldo_epi(
+        CREATE TABLE IF NOT EXISTS saldo_epi(
         matricula TEXT NOT NULL,
         id INTEGER NOT NULL,
         categoria TEXT NOT NULL,
         nome TEXT NOT NULL,
         ca TEXT NOT NULL,
-        disponivel INTEGER NOT NULL),
+        disponivel INTEGER NOT NULL,
         limite INTEGER NOT NULL,
         unidade TEXT NOT NULL,
-        tamanhos TEXT NOT NULL
+        tamanhos TEXT NOT NULL,
         PRIMARY KEY (matricula, id)
         );
-        CREATE TABLE IF NOT EXIST saldo_async (
+
+        CREATE TABLE IF NOT EXISTS saldo_sync (
         matricula TEXT PRIMARY KEY NOT NULL,
         atualizado_em INTEGER NOT NULL
         );
     `);
-    return db;
+  return db;
 }
