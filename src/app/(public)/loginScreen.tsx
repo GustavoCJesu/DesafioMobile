@@ -4,10 +4,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ScrollView,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { ScreenContainer } from "@/components/ScreenContainer";
 
 //Import dos icones
 import {
@@ -31,15 +31,19 @@ import { SafeAreaView } from "react-native-safe-area-context"; // Importe daqui!
 import { Label, Redirect, useRouter } from "expo-router";
 import { useState } from "react";
 
-import { login } from "../../../services/serviceLogin";
+import { login } from "../../services/serviceLogin";
 
-export default function loginScreen() {
+import {useUser} from '../../Context/UserContext'
+
+export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
   const [error, setError] = useState(false);
 
   const router = useRouter()
+
+  const {setUser} = useUser()
 
   const handleLogin = async (email: string, senha: string) => {
     if (!email || !senha) {
@@ -49,7 +53,12 @@ export default function loginScreen() {
 
     try {
       const response = await login(email, senha);
-      router.replace('/(app)/homeScreen')
+      setUser({
+        user: response.user,
+        employee: response.employee
+      })
+
+      router.replace('/(protected)/homeScreen')
     } catch (e) {
       console.log(e);
       throw e;
@@ -60,6 +69,11 @@ export default function loginScreen() {
     <KeyboardAvoidingView style={globalStyles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <LinearGradient {...gradients.primary} style={globalStyles.container}>
         <SafeAreaView style={[globalStyles.container]}>
+          <ScrollView
+            style={styles.scroll}
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+          >
           <View
             style={[
               globalStyles.container,
@@ -160,18 +174,13 @@ export default function loginScreen() {
             </View>
             <View style={[{ alignSelf: "baseline", width: "100%", gap: 5 }]}>
               <Text style={typography.h3}>E-mail ou matrícula</Text>
-              <View
-                style={[
-                  globalStyles.box,
-                  globalStyles.row,
-                  { width: "100%" },
-                  globalStyles.input,
-                ]}
-              >
+              <View style={[globalStyles.row, styles.inputBox]}>
                 <User />
                 <TextInput
-                  style={{ flex: 1 }}
+                  style={styles.inputText}
                   placeholder="E-mail"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
                   onChangeText={setEmail}
                   value={email}
                 />
@@ -179,18 +188,12 @@ export default function loginScreen() {
             </View>
             <View style={[{ alignSelf: "baseline", width: "100%", gap: 5 }]}>
               <Text style={typography.h3}>Senha</Text>
-              <View
-                style={[
-                  globalStyles.box,
-                  globalStyles.row,
-                  { width: "100%" },
-                  globalStyles.input,
-                ]}
-              >
+              <View style={[globalStyles.row, styles.inputBox]}>
                 <Lock />
                 <TextInput
-                  style={{ flex: 1 }}
+                  style={styles.inputText}
                   placeholder="Senha"
+                  autoCapitalize="none"
                   secureTextEntry={hidePassword}
                   onChangeText={setPassword}
                   value={password}
@@ -224,9 +227,56 @@ export default function loginScreen() {
                 </LinearGradient>
               </TouchableOpacity>
             </View>
+            {/* Acesso ao portal do colaborador (sistema separado, em /portal) */}
+            <TouchableOpacity
+              style={styles.portalButton}
+              onPress={() => router.push("/portal/login")}
+            >
+              <Text style={[typography.h3, typography.primary, typography.bold]}>
+                Login sistema STW
+              </Text>
+              <MoveRight color={"#4b5ce3"} size={22} />
+            </TouchableOpacity>
           </View>
+          </ScrollView>
         </SafeAreaView>
       </LinearGradient>
     </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  scroll: {
+    width: "100%",
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  inputBox: {
+    width: "100%",
+    height: 52,
+    gap: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: "#4b5ce3",
+    borderRadius: 10,
+    backgroundColor: "#fff",
+  },
+  inputText: {
+    flex: 1,
+    fontSize: 16,
+    paddingVertical: 0,
+  },
+  portalButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "stretch",
+    marginHorizontal: 5,
+    gap: 8,
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#4b5ce3",
+  },
+});

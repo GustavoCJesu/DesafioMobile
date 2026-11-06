@@ -6,7 +6,7 @@ import { ScreenContainerProps } from "react-native-screens";
 import { gradients } from "../styles/gradientList";
 import { LinearGradient } from "expo-linear-gradient";
 
-export function ScreenContainer({ children }: ScreenContainerProps) {
+export default function ScreenContainer({ children }: ScreenContainerProps) {
   return (
     <SafeAreaView>
       <StatusBar barStyle="dark-content" />
