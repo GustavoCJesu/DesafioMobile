@@ -5,7 +5,7 @@ export type TamanhoEstoque = {
   estoque: number;
 };
 
-export type SaldoEpi = {
+export type SaldoEpiCardData = {
   id: number;
   /** Categoria do EPI, exibida em verde acima do nome */
   categoria: string;
@@ -28,7 +28,7 @@ export type SaldoEpi = {
   tamanhos: TamanhoEstoque[];
 };
 
-export const saldoEpisMock: SaldoEpi[] = [
+export const saldoEpisMock: SaldoEpiCardData[] = [
   {
     id: 1,
     categoria: "Luva de grafeno",

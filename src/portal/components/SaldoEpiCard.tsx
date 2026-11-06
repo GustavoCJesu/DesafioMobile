@@ -1,15 +1,16 @@
-import { Platform, StyleSheet, Text, View } from "react-native";
-import { Clock, HardHat } from "lucide-react-native";
-import { SaldoEpi } from "@/portal/mocks/saldoEpis";
+import { SaldoEpiCardData } from "@/portal/mocks/saldoEpis";
 import { portalColors } from "@/portal/theme";
+import { Clock, HardHat } from "lucide-react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 
 type Props = {
-  item: SaldoEpi;
+  item: SaldoEpiCardData;
 };
 
 export function SaldoEpiCard({ item }: Props) {
   const caEmAlerta = item.caVenceEmDias !== null && item.caVenceEmDias <= 60;
-  const percentual = item.limite > 0 ? (item.disponivel / item.limite) * 100 : 0;
+  const percentual =
+    item.limite > 0 ? (item.disponivel / item.limite) * 100 : 0;
 
   return (
     <View style={styles.card}>
@@ -30,25 +31,21 @@ export function SaldoEpiCard({ item }: Props) {
       <View style={styles.tags}>
         <View style={[styles.tag, caEmAlerta && styles.tagAlerta]}>
           <Text style={[styles.tagMono, caEmAlerta && styles.tagAlertaText]}>
-            CA{item.ca}·
-            {caEmAlerta
-              ? `vence em ${item.caVenceEmDias} dias`
-              : `válido até ${item.caValidade}`}
+            CA{item.ca}
           </Text>
-        </View>
-        <View style={[styles.tag, styles.tagRow]}>
-          <Clock size={13} color={portalColors.muted} />
-          <Text style={styles.tagText}>Vida útil {item.vidaUtilDias} dias</Text>
         </View>
       </View>
 
       <View style={styles.saldoBox}>
         <View style={styles.saldoHeader}>
           <Text style={styles.saldoLabel}>Disponível para retirar</Text>
-          <Text style={styles.saldoLabel}>limite {item.limite} por período</Text>
+          <Text style={styles.saldoLabel}>
+            limite {item.limite} por período
+          </Text>
         </View>
         <Text style={styles.saldoValor}>
-          {item.disponivel} <Text style={styles.saldoUnidade}>{item.unidade}</Text>
+          {item.disponivel}{" "}
+          <Text style={styles.saldoUnidade}>{item.unidade}</Text>
         </Text>
         <View style={styles.progressTrack}>
           {/* Único estilo dinâmico: largura proporcional ao saldo */}
@@ -58,16 +55,21 @@ export function SaldoEpiCard({ item }: Props) {
 
       {item.tamanhos.length > 0 && (
         <View style={styles.tamanhos}>
-          <Text style={styles.tamanhosTitle}>Tamanhos · estoque no equipamento</Text>
+          <Text style={styles.tamanhosTitle}>
+            Tamanhos · estoque no equipamento
+          </Text>
           <View style={styles.tamanhosRow}>
-            {item.tamanhos.map(({ tamanho, estoque }) =>
+            {item.tamanhos.map(({ tamanho, estoque }, index) =>
               estoque > 0 ? (
-                <View key={tamanho} style={styles.tamanhoChip}>
+                <View key={`${tamanho}-${index}`} style={styles.tamanhoChip}>
                   <Text style={styles.tamanhoLabel}>{tamanho}</Text>
                   <Text style={styles.tamanhoEstoque}>{estoque} un.</Text>
                 </View>
               ) : (
-                <View key={tamanho} style={[styles.tamanhoChip, styles.tamanhoVazio]}>
+                <View
+                  key={`${tamanho}-${index}`}
+                  style={[styles.tamanhoChip, styles.tamanhoVazio]}
+                >
                   <Text style={styles.tamanhoVazioLabel}>{tamanho}</Text>
                   <Text style={styles.tamanhoVazioTexto}>sem estoque</Text>
                 </View>

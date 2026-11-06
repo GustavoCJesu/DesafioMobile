@@ -12,7 +12,7 @@ export type Variacao = {
   id: number;
   id_contrato: number;
   tipo: string;
-  descricao: string;
+  descricao: string | null;
 };
 
 export type Estoque = {
@@ -75,6 +75,6 @@ export type SaldoEpi = {
     qtd_disponivel: number
 }
 
-export type saldoEpisResponse = {
+export type SaldoEpisResponse = {
     saldo_epis: SaldoEpi[]
 }

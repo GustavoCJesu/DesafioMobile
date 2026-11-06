@@ -1,5 +1,14 @@
+import { SaldoEpiCard } from "@/portal/components/SaldoEpiCard";
+import { SaldoEpiCardData } from "@/portal/mocks/saldoEpis";
+import { useSaldoEpis } from "@/portal/hooks/useSaldoEpis";
+import { usePortalSession } from "@/portal/providers/PortalSessionProvider";
+import { portalColors, portalGradient } from "@/portal/theme";
+import { LinearGradient } from "expo-linear-gradient";
+import { ChevronLeft, RefreshCw, Search } from "lucide-react-native";
 import { useState } from "react";
 import {
+  ActivityIndicator,
+  FlatList,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -8,16 +17,10 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
-import { ChevronLeft, RefreshCw, Search } from "lucide-react-native";
-import { SaldoEpiCard } from "@/portal/components/SaldoEpiCard";
-import { SaldoEpi, saldoEpisMock } from "@/portal/mocks/saldoEpis";
-import { portalColors, portalGradient } from "@/portal/theme";
-import { usePortalSession } from "@/portal/providers/PortalSessionProvider";
 
 type Filtro = "todos" | "saldo" | "vencer";
 
-const filtros: Record<Filtro, (item: SaldoEpi) => boolean> = {
+const filtros: Record<Filtro, (item: SaldoEpiCardData) => boolean> = {
   todos: () => true,
   saldo: (item) => item.disponivel > 0,
   vencer: (item) => item.caVenceEmDias !== null && item.caVenceEmDias <= 60,
@@ -33,11 +36,12 @@ function normalize(text: string) {
 
 export default function PortalSaldo() {
   const { session, signOut } = usePortalSession();
+  const { saldo, loading, erro } = useSaldoEpis();
   const [busca, setBusca] = useState("");
   const [filtro, setFiltro] = useState<Filtro>("todos");
 
   const termo = normalize(busca.trim());
-  const itens = saldoEpisMock.filter(
+  const itens = saldo.filter(
     (item) =>
       filtros[filtro](item) &&
       (!termo ||
@@ -47,11 +51,7 @@ export default function PortalSaldo() {
   );
 
   return (
-    <ScrollView
-      style={styles.screen}
-      contentContainerStyle={styles.content}
-      keyboardShouldPersistTaps="handled"
-    >
+    <View style={styles.screen}>
       <LinearGradient {...portalGradient} style={styles.hero}>
         <SafeAreaView edges={["top"]}>
           <View style={styles.topBar}>
@@ -114,14 +114,14 @@ export default function PortalSaldo() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
+        style={{ flexGrow: 0, flexShrink: 0 }}
         contentContainerStyle={styles.chips}
       >
         {/* esperado nos chips: total de itens de cada filtro (mesmos números do resumo acima) */}
         {(
           [
-            ["todos", "Todos · 5"],
-            ["saldo", "Com saldo · 4"],
-            ["vencer", "CA a vencer · 1"],
+            ["todos", "Todos"],
+            ["saldo", "Com saldo"],
           ] as [Filtro, string][]
         ).map(([key, label]) => (
           <Pressable
@@ -141,14 +141,23 @@ export default function PortalSaldo() {
         ))}
       </ScrollView>
 
-      <View style={styles.list}>
-        {itens.length === 0 ? (
-          <Text style={styles.empty}>Nenhum EPI encontrado</Text>
-        ) : (
-          itens.map((item) => <SaldoEpiCard key={item.id} item={item} />)
-        )}
-      </View>
-    </ScrollView>
+      {loading ? (
+        <ActivityIndicator size="large" color={portalColors.primary} />
+      ) : erro ? (
+        <Text style={styles.empty}>{erro}</Text>
+      ) : (
+        <FlatList
+          data={itens}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item }) => <SaldoEpiCard item={item} />}
+          contentContainerStyle={styles.list}
+          keyboardShouldPersistTaps="handled"
+          ListEmptyComponent={
+            <Text style={styles.empty}>Nenhum EPI encontrado</Text>
+          }
+        />
+      )}
+    </View>
   );
 }
 
@@ -156,9 +165,6 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: portalColors.background,
-  },
-  content: {
-    paddingBottom: 32,
   },
   hero: {
     paddingHorizontal: 24,
@@ -281,6 +287,7 @@ const styles = StyleSheet.create({
   },
   list: {
     paddingHorizontal: 20,
+    paddingBottom: 32,
     gap: 14,
   },
   empty: {
