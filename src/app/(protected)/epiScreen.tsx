@@ -16,7 +16,6 @@ import { EpiListItem } from "@/components/epis/EpiListItem";
 import { useEpis } from "@/hooks/useEpis";
 import { gradients } from "@/styles/gradientList";
 
-// Remove acentos e caixa para a busca
 function normalize(text: string) {
   return text
     .normalize("NFD")
@@ -24,7 +23,6 @@ function normalize(text: string) {
     .toLowerCase();
 }
 
-// "Proteção respiratória" -> "Respiratória"
 function shortCategory(category: string) {
   const short = category.replace(/^Proteção\s+(d[aoe]s?\s+|contra\s+)?/i, "");
   return short.charAt(0).toUpperCase() + short.slice(1);
@@ -112,7 +110,6 @@ export default function EpiScreen() {
             {epis.length} cadastrados · {categories.length} categorias
           </Text>
         </View>
-        {/* TODO: abrir o cadastro de EPI quando a tela existir */}
         <Pressable accessibilityLabel="Novo EPI">
           <LinearGradient
             {...gradients.primaryDiagonal}
@@ -172,7 +169,6 @@ export default function EpiScreen() {
         {renderBody()}
       </ScrollView>
 
-      {/* TODO: abrir o fluxo de entrega de EPI quando a tela existir */}
       <Pressable style={styles.fabWrapper} accessibilityLabel="Entregar EPI">
         <LinearGradient {...gradients.primary} style={styles.fab}>
           <ScanLine size={20} color="#fff" />

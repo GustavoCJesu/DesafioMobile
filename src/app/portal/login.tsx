@@ -41,7 +41,6 @@ export default function PortalLogin() {
   const [erro, setErro] = useState<string | null>(null);
   const [carregando, setCarregando] = useState(false);
 
-  // Volta para o login do app principal (Gestão SST)
   function voltarParaGestao() {
     router.replace("/loginScreen");
   }
@@ -92,23 +91,17 @@ export default function PortalLogin() {
               >
                 <ChevronLeft size={26} color={portalColors.white} />
               </Pressable>
-              <View style={styles.logoBox}>
-                {/* esperado: logo da empresa parceira (imagem); placeholder enquanto não houver arte */}
-                <Text style={styles.logoText}>[Logo do parceiro]</Text>
-              </View>
               <View style={styles.topBarSpacer} />
             </View>
 
             <View style={styles.heroBody}>
               <View style={styles.pill}>
                 <View style={styles.pillDot} />
-                {/* esperado: nome do serviço/fluxo do portal */}
                 <Text style={styles.pillText}>Retirada de EPIs</Text>
               </View>
               <Text style={styles.heroTitle}>Seus EPIs, sempre à mão.</Text>
 
               <View style={styles.heroRow}>
-                {/* esperado: frase curta explicando o que o colaborador encontra aqui */}
                 <Text style={styles.heroSubtitle}>
                   Veja o que você retirou nos lockers e dispensers e quando é hora
                   de trocar.
@@ -131,7 +124,6 @@ export default function PortalLogin() {
 
         <View style={styles.sheet}>
           <Text style={styles.sheetTitle}>Entrar</Text>
-          {/* esperado: explica que o login é o mesmo dos equipamentos de retirada */}
           <Text style={styles.sheetSubtitle}>
             Use o e-mail e a senha cadastrados no sistema de retirada.
           </Text>
@@ -195,7 +187,6 @@ export default function PortalLogin() {
               </View>
               <Text style={styles.rememberText}>Lembrar de mim</Text>
             </Pressable>
-            {/* TODO: fluxo de recuperação de senha */}
             <Pressable hitSlop={8}>
               <Text style={styles.forgot}>Esqueci a senha</Text>
             </Pressable>
@@ -219,7 +210,6 @@ export default function PortalLogin() {
 
           <View style={styles.notice}>
             <ShieldCheck size={16} color={portalColors.primary} />
-            {/* esperado: aviso de que o acesso é integrado ao sistema de gestão (nome do produto) */}
             <Text style={styles.noticeText}>
               Acesso conectado ao Gestão SST. Seus dados de retirada aparecem
               também no seu perfil.

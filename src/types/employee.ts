@@ -7,7 +7,6 @@ export type Employee = {
   sector: string;
   registration: string;
   cpf: string;
-  /** Data de admissão no formato ISO (YYYY-MM-DD) */
   admissionDate: string;
   status: EmployeeStatus;
 };

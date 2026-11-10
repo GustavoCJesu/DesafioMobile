@@ -3,7 +3,6 @@ import * as SecureStore from "expo-secure-store";
 import { employeesMock } from "@/mocks/employees";
 import { Employee } from "@/types/employee";
 
-// Trocar para false quando a rota GET /employees estiver pronta no backend
 const USE_MOCK = true;
 
 export async function listEmployees(): Promise<Employee[]> {
@@ -27,6 +26,5 @@ export async function listEmployees(): Promise<Employee[]> {
     },
   );
 
-  // Aceita tanto { data: [...] } (Laravel Resource) quanto [...]
   return response.data?.data ?? response.data;
 }

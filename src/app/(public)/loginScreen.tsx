@@ -9,7 +9,6 @@ import {
   Platform,
 } from "react-native";
 
-//Import dos icones
 import {
   ShieldCheck,
   CircleCheck,
@@ -20,14 +19,13 @@ import {
   EyeClosed,
 } from "lucide-react-native";
 
-//Import gradients
 import { gradients } from "../../styles/gradientList";
 import { LinearGradient } from "expo-linear-gradient";
 
 import { typography } from "../../styles/typography";
 import { globalStyles } from "../../styles/globalStyles";
 
-import { SafeAreaView } from "react-native-safe-area-context"; // Importe daqui!
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Label, Redirect, useRouter } from "expo-router";
 import { useState } from "react";
 
@@ -227,7 +225,6 @@ export default function LoginScreen() {
                 </LinearGradient>
               </TouchableOpacity>
             </View>
-            {/* Acesso ao portal do colaborador (sistema separado, em /portal) */}
             <TouchableOpacity
               style={styles.portalButton}
               onPress={() => router.push("/portal/login")}

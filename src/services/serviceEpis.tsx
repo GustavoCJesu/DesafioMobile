@@ -3,7 +3,6 @@ import * as SecureStore from "expo-secure-store";
 import { episMock } from "@/mocks/epis";
 import { Epi } from "@/types/epi";
 
-// Trocar para false quando a rota GET /epis estiver pronta no backend
 const USE_MOCK = true;
 
 export async function listEpis(): Promise<Epi[]> {
@@ -24,6 +23,5 @@ export async function listEpis(): Promise<Epi[]> {
     },
   });
 
-  // Aceita tanto { data: [...] } (Laravel Resource) quanto [...]
   return response.data?.data ?? response.data;
 }

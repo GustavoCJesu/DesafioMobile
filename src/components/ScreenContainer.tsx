@@ -1,8 +1,7 @@
 import { StyleSheet, View, StatusBar } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context"; // Importe daqui!
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ScreenContainerProps } from "react-native-screens";
 
-//Import gradients
 import { gradients } from "../styles/gradientList";
 import { LinearGradient } from "expo-linear-gradient";
 

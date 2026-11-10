@@ -24,7 +24,6 @@ type Chip = {
   match: (employee: Employee) => boolean;
 };
 
-// Remove acentos e caixa para a busca ("jose" encontra "José")
 function normalize(text: string) {
   return text
     .normalize("NFD")
@@ -137,7 +136,6 @@ export default function EmployeeScreen() {
           <Text style={styles.title}>Funcionários</Text>
           <Text style={styles.subtitle}>{subtitle}</Text>
         </View>
-        {/* TODO: abrir o cadastro de funcionário quando a tela existir */}
         <Pressable accessibilityLabel="Novo funcionário">
           <LinearGradient
             {...gradients.primaryDiagonal}
@@ -161,7 +159,6 @@ export default function EmployeeScreen() {
             returnKeyType="search"
           />
         </View>
-        {/* TODO: definir o que o botão de filtro abre (ordenação/filtros avançados) */}
         <Pressable style={styles.filterButton} accessibilityLabel="Filtros">
           <Funnel size={18} color="#0f172a" />
         </Pressable>

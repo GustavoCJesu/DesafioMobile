@@ -36,21 +36,6 @@ export default function ProtectedLayout() {
   }
 
   return (
-    // <Tabs
-    //   screenOptions={({ route }) => ({
-    //     tabBarIcon: ({ color, size }) => {
-    //       // Retorna o ícone correto do Lucide de acordo com a aba atual
-    //       if (route.name === 'index') {
-    //         return <Home color={color} size={size} />;
-    //       } else if (route.name === 'perfil') {
-    //         return <User color={color} size={size} />;
-    //       }
-    //     },
-    //     tabBarActiveTintColor: '#BA8E23', // Cor quando a aba estiver selecionada
-    //     tabBarInactiveTintColor: 'gray',  // Cor quando não estiver selecionada
-    //     headerShown: false,
-    //   })}
-    // ></Tabs>
 
     <Tabs
       screenOptions={({ route }) => ({

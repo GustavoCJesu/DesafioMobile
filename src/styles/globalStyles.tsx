@@ -5,7 +5,6 @@ import {
     StyleSheet
 } from "react-native"
 
-
 export const globalStyles = StyleSheet.create({
     container:{
         flex: 1,
@@ -57,7 +56,7 @@ export const globalStyles = StyleSheet.create({
         },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 3, // Necessário para o Android
+        elevation: 3,
     },
     input:{
         borderWidth: 1,

@@ -33,7 +33,6 @@ const acoesRapidas = [
   { icon: HardHat, label: "EPIs", href: "/epiScreen" as const },
 ];
 
-// Um único ponto para adaptar o formato dos certificados que a API devolver
 function toCardVenceEmBreve(item: any) {
   const nome = item?.employee?.name ?? item?.employee_name ?? item?.nome ?? "";
   return {
@@ -77,14 +76,11 @@ export default function HomeScreen() {
   const { user } = useUser();
   const router = useRouter();
 
-  // Logo após o login o contexto tem { user, employee }; depois do /me, { user: { employee } }
   const nome: string = user?.user?.employee?.name ?? user?.employee?.name ?? "";
 
-  //Formatação do Nome
   const primeiroNome = nome.trim().split(/\s+/)[0];
   const iniciais = getIniciais(nome);
 
-  //Formatação Data
   const dataAtual = new Date();
   const diaSemana = new Intl.DateTimeFormat("pt-BR", {
     weekday: "long",
@@ -99,7 +95,6 @@ export default function HomeScreen() {
     diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1);
   const dataCompleta = `${diaSemanaFormatado}, ${diaMes} de ${mes}`;
 
-
   if (loading) {
     return (
       <View style={styles.loading}>
@@ -112,7 +107,6 @@ export default function HomeScreen() {
   return (
     <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
       <View style={[globalStyles.container, styles.content]}>
-        {/* Menu do usuario */}
         <View style={[globalStyles.row, styles.userMenu]}>
           <View>
             <Text style={[typography.h2, styles.avatar, globalStyles.ps]}>
@@ -126,7 +120,6 @@ export default function HomeScreen() {
             <Text>{dataCompleta}</Text>
           </View>
         </View>
-        {/* Seção Indice de conformidade e outras informações */}
         <LinearGradient
           {...gradients.primary}
           style={[globalStyles.pm, styles.conformidadeCard]}
@@ -145,7 +138,6 @@ export default function HomeScreen() {
               </Text>
             </View>
             <View style={styles.progressTrack}>
-              {/* Único estilo dinâmico: a largura depende do valor da API */}
               <View
                 style={[styles.progressFill, { width: `${conformidade}%` }]}
               ></View>
@@ -174,8 +166,6 @@ export default function HomeScreen() {
             </View>
           </View>
         </LinearGradient>
-        {/* Seção Indice de conformidade e outras informações  - FIM*/}
-        {/* Seção 'Precisa de Atenção' */}
         <View style={styles.section}>
           <Text style={[typography.h3, typography.bold, styles.sectionTitle]}>
             Precisa de atenção
@@ -199,8 +189,6 @@ export default function HomeScreen() {
             </View>
           </View>
         </View>
-        {/* Seção 'Precisa de Atenção' - FIM */}
-        {/* Ações Rapidas */}
         <View style={styles.sectionGap}>
           <Text style={[typography.h3, typography.bold, styles.sectionTitle]}>
             Ações rápidas
@@ -222,7 +210,6 @@ export default function HomeScreen() {
             ))}
           </View>
         </View>
-        {/* Ações Rapidas - FIM*/}
         <View style={styles.sectionGap}>
           <View style={[globalStyles.row, styles.venceHeader]}>
             <Text style={[typography.h3, typography.bold, styles.sectionTitle]}>

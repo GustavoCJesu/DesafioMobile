@@ -1,6 +1,5 @@
 import type { PortalLoginResponse, Session } from "@/portal/types/session";
 
-// Converte a resposta da API no formato que o app guarda (token + expiração agrupados)
 export function toSession(response: PortalLoginResponse): Session {
   return {
     habilidades: response.habilidades,
