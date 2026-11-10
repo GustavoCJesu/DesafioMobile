@@ -4,8 +4,9 @@ import { useSaldoEpis } from "@/portal/hooks/useSaldoEpis";
 import { usePortalSession } from "@/portal/providers/PortalSessionProvider";
 import { portalColors, portalGradient } from "@/portal/theme";
 import { LinearGradient } from "expo-linear-gradient";
-import { ChevronLeft, RefreshCw, Search } from "lucide-react-native";
-import { useState } from "react";
+import { formatarDataHora, tempoDesde } from "@/portal/utils/tempo";
+import { ChevronLeft, RefreshCw, Search, WifiOff } from "lucide-react-native";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -18,15 +19,13 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-type Filtro = "todos" | "saldo" | "vencer";
+type Filtro = "todos" | "saldo";
 
 const filtros: Record<Filtro, (item: SaldoEpiCardData) => boolean> = {
   todos: () => true,
   saldo: (item) => item.disponivel > 0,
-  vencer: (item) => item.caVenceEmDias !== null && item.caVenceEmDias <= 60,
 };
 
-// Remove acentos e caixa para a busca
 function normalize(text: string) {
   return text
     .normalize("NFD")
@@ -36,9 +35,18 @@ function normalize(text: string) {
 
 export default function PortalSaldo() {
   const { session, signOut } = usePortalSession();
-  const { saldo, loading, erro } = useSaldoEpis();
+  const { saldo, loading, erro, offline, atualizadoEm, recarregar } = useSaldoEpis();
+  const [agora, setAgora] = useState(() => Date.now())
   const [busca, setBusca] = useState("");
   const [filtro, setFiltro] = useState<Filtro>("todos");
+
+  useEffect(()=>{
+    const id = setInterval(()=> setAgora(Date.now()), 30000)
+    return () => clearInterval(id)
+  }, [])
+
+  const comSaldo = saldo.filter(filtros.saldo).length;
+  const semSaldo = saldo.length - comSaldo;
 
   const termo = normalize(busca.trim());
   const itens = saldo.filter(
@@ -63,12 +71,19 @@ export default function PortalSaldo() {
               <ChevronLeft size={26} color={portalColors.white} />
             </Pressable>
             <View style={styles.sync}>
-              <View style={styles.syncDot} />
-              {/* esperado: há quanto tempo o saldo foi sincronizado com os equipamentos */}
-              <Text style={styles.syncText}>Sincronizado há 2 min</Text>
+              <View style={[styles.syncDot, offline && styles.syncDotOffline]} />
+              <Text style={styles.syncText}>
+                {atualizadoEm
+                  ? `${offline ? "Dados salvos" : "Sincronizado"} ${tempoDesde(atualizadoEm, agora)}`
+                  : "Sincronizando..."}
+              </Text>
             </View>
-            {/* TODO: recarregar o saldo na API */}
-            <Pressable hitSlop={12} accessibilityLabel="Atualizar">
+            <Pressable
+              onPress={recarregar}
+              disabled={loading}
+              hitSlop={12}
+              accessibilityLabel="Atualizar"
+            >
               <RefreshCw size={20} color={portalColors.white} />
             </Pressable>
           </View>
@@ -81,23 +96,33 @@ export default function PortalSaldo() {
 
       <View style={styles.summary}>
         <View style={styles.summaryItem}>
-          {/* esperado: total de EPIs liberados para o colaborador */}
-          <Text style={styles.summaryValue}>5</Text>
+          <Text style={styles.summaryValue}>{saldo.length}</Text>
           <Text style={styles.summaryLabel}>Liberados</Text>
         </View>
         <View style={styles.summaryDivider} />
         <View style={styles.summaryItem}>
-          {/* esperado: quantos dos liberados ainda têm saldo para retirar */}
-          <Text style={[styles.summaryValue, styles.summaryGreen]}>4</Text>
+          <Text style={[styles.summaryValue, styles.summaryGreen]}>
+            {comSaldo}
+          </Text>
           <Text style={styles.summaryLabel}>Com saldo</Text>
         </View>
         <View style={styles.summaryDivider} />
         <View style={styles.summaryItem}>
-          {/* esperado: quantos EPIs têm CA vencendo nos próximos 60 dias */}
-          <Text style={[styles.summaryValue, styles.summaryOrange]}>1</Text>
-          <Text style={styles.summaryLabel}>CA a vencer</Text>
+          <Text style={[styles.summaryValue, styles.summaryOrange]}>
+            {semSaldo}
+          </Text>
+          <Text style={styles.summaryLabel}>Sem saldo</Text>
         </View>
       </View>
+
+      {offline && atualizadoEm && (
+        <View style={styles.offlineBanner}>
+          <WifiOff size={16} color="#9a3412" />
+          <Text style={styles.offlineText}>
+            Modo offline · dados de {formatarDataHora(atualizadoEm)}
+          </Text>
+        </View>
+      )}
 
       <View style={styles.searchBox}>
         <Search size={18} color={portalColors.muted} />
@@ -117,11 +142,10 @@ export default function PortalSaldo() {
         style={{ flexGrow: 0, flexShrink: 0 }}
         contentContainerStyle={styles.chips}
       >
-        {/* esperado nos chips: total de itens de cada filtro (mesmos números do resumo acima) */}
         {(
           [
-            ["todos", "Todos"],
-            ["saldo", "Com saldo"],
+            ["todos", `Todos · ${saldo.length}`],
+            ["saldo", `Com saldo · ${comSaldo}`],
           ] as [Filtro, string][]
         ).map(([key, label]) => (
           <Pressable
@@ -187,6 +211,27 @@ const styles = StyleSheet.create({
     height: 7,
     borderRadius: 4,
     backgroundColor: "#86efac",
+  },
+  syncDotOffline: {
+    backgroundColor: portalColors.warn,
+  },
+  offlineBanner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginHorizontal: 20,
+    marginTop: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: portalColors.warn,
+    backgroundColor: "#fff7ed",
+  },
+  offlineText: {
+    color: "#9a3412",
+    fontSize: 13,
+    fontWeight: "600",
   },
   syncText: {
     color: "rgba(255,255,255,0.9)",

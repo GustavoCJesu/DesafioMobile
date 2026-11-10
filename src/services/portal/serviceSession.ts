@@ -46,9 +46,8 @@ export async function loadSession(): Promise<Session | null> {
       token: parsedToken
     }
 
-  }catch(e){
+  }catch{
     await clearSession()
-    console.log('Erro no parse das informações para JSON', e)
     return null
   }
 

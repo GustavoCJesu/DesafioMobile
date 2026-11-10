@@ -1,6 +1,6 @@
 import { SaldoEpiCardData } from "@/portal/mocks/saldoEpis";
 import { portalColors } from "@/portal/theme";
-import { Clock, HardHat } from "lucide-react-native";
+import { HardHat } from "lucide-react-native";
 import { Platform, StyleSheet, Text, View } from "react-native";
 
 type Props = {
@@ -8,7 +8,6 @@ type Props = {
 };
 
 export function SaldoEpiCard({ item }: Props) {
-  const caEmAlerta = item.caVenceEmDias !== null && item.caVenceEmDias <= 60;
   const percentual =
     item.limite > 0 ? (item.disponivel / item.limite) * 100 : 0;
 
@@ -29,10 +28,8 @@ export function SaldoEpiCard({ item }: Props) {
       </View>
 
       <View style={styles.tags}>
-        <View style={[styles.tag, caEmAlerta && styles.tagAlerta]}>
-          <Text style={[styles.tagMono, caEmAlerta && styles.tagAlertaText]}>
-            CA{item.ca}
-          </Text>
+        <View style={styles.tag}>
+          <Text style={styles.tagMono}>CA{item.ca}</Text>
         </View>
       </View>
 
@@ -48,7 +45,6 @@ export function SaldoEpiCard({ item }: Props) {
           <Text style={styles.saldoUnidade}>{item.unidade}</Text>
         </Text>
         <View style={styles.progressTrack}>
-          {/* Único estilo dinâmico: largura proporcional ao saldo */}
           <View style={[styles.progressFill, { width: `${percentual}%` }]} />
         </View>
       </View>
@@ -161,17 +157,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 5,
   },
-  tagAlerta: {
-    backgroundColor: portalColors.warnBackground,
-    borderColor: portalColors.warnBorder,
-  },
   tagMono: {
     color: "#334155",
     fontSize: 12,
     fontFamily: mono,
-  },
-  tagAlertaText: {
-    color: portalColors.warn,
   },
   tagText: {
     color: "#334155",

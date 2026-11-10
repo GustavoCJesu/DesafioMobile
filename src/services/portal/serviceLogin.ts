@@ -1,5 +1,5 @@
 import { PortalLoginResponse } from "@/portal/types/session";
-import axios, {isAxiosError} from "axios";
+import axios from "axios";
 
 export async function login(email: string, senha: string) {
   const baseURL = process.env.EXPO_PUBLIC_STW_BASE_URL;
